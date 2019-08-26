@@ -1,0 +1,209 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package bfs.dfs;
+
+
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Scanner;
+
+/**
+ *
+ * @author Bahar Mousazadeh
+ */
+public class BFSDFS {
+    
+static int time =0;
+    public static void main(String[] args) {
+        Scanner console = new Scanner (System.in);
+        
+            System.out.println("Searching a graph") ;
+            System.out.println("Enter number of vertices : ") ;
+            
+            int v = console.nextInt() ;
+            LinkedList<Integer>[] adj= new LinkedList[v];
+           
+            for (int i = 0 ; i < v ; i++){
+                if (adj[i] == null) {
+                    adj[i] = new LinkedList<Integer>();
+                }
+            }
+            int[] color = new int[v] ;
+            int[] predecessor = new int[v] ;
+            int[] distance = new int[v] ;
+            
+            while(true){
+                
+                System.out.println("") ;
+                System.out.println("1)Add an edge") ;    
+                System.out.println("2)Breadth-first search") ;
+                System.out.println("3)Shortest path") ;
+                System.out.println("4)Depth-first search") ;
+                System.out.println("5)Exit") ;
+                System.out.println("") ;
+                
+                int select = console.nextInt() ;
+                
+                if(select == 1){
+                    System.out.println("Enter vertex 1 : ") ;
+                    int edge1 = console.nextInt() ;
+                    System.out.println("Enter vertex 2 : ") ;
+                    int edge2 = console.nextInt() ;
+                    adj[edge1].add(edge2) ;
+                    adj[edge2].add(edge1) ;
+            }
+                if(select == 2){
+                    
+                    System.out.print("Enter the source vertex : ") ;  
+
+                    int s = console.nextInt() ;
+                    
+                    for(int i = 0 ; i < v ; i++){
+                        if(i == s){
+                        color[i] = 1 ;
+                        distance[i] = 0 ;
+                    }
+                    else{
+                            color[i] = 0 ;
+                    }
+            }
+                Queue<Integer> q = new LinkedList<>() ;
+                q.add(s) ;
+                
+                while(!q.isEmpty()){
+                    int u = q.poll() ;
+                    System.out.print(u + " ") ;
+                    
+                    for(int i = 0 ; i < adj[u].size() ; i++ ){
+                        
+                        if(color[adj[u].get(i)] == 0){
+                            color[adj[u].get(i)] = 1 ;
+                            distance[adj[u].get(i)] = distance[u] + 1 ;
+                            predecessor[adj[u].get(i)] = u ;
+                            q.add(adj[u].get(i)) ;
+                        }
+                        color[u] = 2 ;
+                    }
+                }
+                System.out.println("") ;
+                System.out.print("Color of vertices : ") ;
+                for(int i = 0 ; i < v ; i++){
+                    if(color[i] == 0){
+                        System.out.print("White" + " ") ;
+                    }
+                    else if(color[i] == 1){
+                      System.out.print("Gray" + " ") ;  
+                    }
+                    else{
+                      System.out.print("Black" + " ") ;  
+                    }
+                }
+                }
+                if(select == 3){
+                                        
+                    System.out.print("Enter the source vertex : ") ;  
+
+                    int s = console.nextInt() ;
+                    
+                    System.out.print("Enter the next vertex : ") ;
+                    
+                    int ri = console.nextInt();
+                    
+                    for(int i = 0 ; i < v ; i++){
+                        if(i == s){
+                        color[i] = 1 ;
+                        distance[i] = 0 ;
+                    }
+                    else{
+                            color[i] = 0 ;
+                    }
+            }
+                Queue<Integer> q = new LinkedList<>() ;
+                q.add(s) ;
+                
+                while(!q.isEmpty()){
+                    int u = q.poll() ;
+                    
+                    for(int i = 0 ; i < adj[u].size() ; i++ ){
+                        
+                        if(color[adj[u].get(i)] == 0){
+                            color[adj[u].get(i)] = 1 ;
+                            distance[adj[u].get(i)] = distance[u] + 1 ;
+                            predecessor[adj[u].get(i)] = u ;
+                            q.add(adj[u].get(i)) ;
+                        }
+                        color[u] = 2 ;
+                    }
+                }
+                    System.out.print("Shortest path is : " + distance[ri]) ;
+                    
+                }
+                if(select == 4){
+                     time = 0 ;
+                    
+                    
+                    int[] finish = new int[v] ;
+                    int[] discover = new int[v] ;
+                    
+                    for(int i = 0 ; i < v ; i++){
+                        color[i] = 0 ;
+                    }
+                    for(int i = 0 ; i < v ; i++){
+                        if(color[i] == 0){
+                            
+                            DFS_VISIT(i , v , finish , discover , color , predecessor , adj);
+                        
+                        }
+                    }
+                    System.out.println("") ;
+                    System.out.print("Discover time : ") ;
+                    for(int j = 0 ; j < v ; j++){
+                        System.out.print(discover[j] + "/"+ finish[j] + " ") ;
+                   
+                    }
+                    
+                    System.out.println("") ;
+                    System.out.print("Color of vertices : ") ;
+                    for(int i = 0 ; i < v ; i++){
+                        if(color[i] == 0){
+                        System.out.print("White" + " ") ;
+                    }
+                    else if(color[i] == 1){
+                      System.out.print("Gray" + " ") ;  
+                    }
+                    else{
+                      System.out.print("Black" + " ") ;  
+                    }
+                }
+                }
+                if(select == 5){
+                    break ;
+            }
+            }
+        }
+
+    public static void DFS_VISIT(int i , int v , int[] finish, int[] discover, int[] color , int[] predecessor , LinkedList<Integer>[] adj){
+        time = time + 1 ;
+        discover[i] = time ;
+        color[i] = 1 ;
+
+
+            
+        for(int j = 0 ; j < adj[i].size() ; j++ ){
+            if(color[adj[i].get(j)] == 0){
+                predecessor[adj[i].get(j)] = i ;
+                DFS_VISIT(adj[i].get(j) , v  , finish , discover , color , predecessor ,adj);
+            }
+        }
+        System.out.print(i + " ") ;
+        
+        color[i] = 2 ;
+        time = time + 1 ;
+        finish[i] = time ;
+        
+    }
+}
